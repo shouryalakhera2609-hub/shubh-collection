@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shubh Collection and General Store</title>
+
+    <!-- Google Sign-In Library -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Poppins', 'Arial', sans-serif;
+            background: linear-gradient(-45deg, #ffffff, #f0f8ff, #e6f3ff, #ffffff);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            overflow-x: hidden;
+            position: relative;
+            padding-bottom: 60px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating glowing circles */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.35;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        body::before {
+            width: 400px;
+            height: 400px;
+            background: #1e90ff;
+            top: -120px;
+            left: -120px;
+            animation: float1 9s ease-in-out infinite;
+        }
+
+        body::after {
+            width: 380px;
+            height: 380px;
+            background: #00bfff;
+            bottom: -120px;
+            right: -120px;
+            animation: float2 11s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(60px, 40px); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-50px, -40px); }
+        }
+
+        /* Top bar with login */
+        .top-bar {
+            position: fixed;
+            top: 20px;
+            right: 25px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-info {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            padding: 6px 14px 6px 6px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(30, 144, 255, 0.2);
+            border: 1px solid #e6f3ff;
+        }
+
+        .user-info img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .user-info span {
+            color: #1e3a8a;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .logout-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 50px 20px 20px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #1e6fdb;
+            text-shadow: 
+                0 0 12px rgba(30, 144, 255, 0.35),
+                0 0 30px rgba(30, 144, 255, 0.2);
+            opacity: 0;
+            animation: dropDown 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes dropDown {
+            0% { opacity: 0; transform: translateY(-250px) scale(0.8); }
+            60% { opacity: 1; transform: translateY(15px) scale(1.03); }
+            80% { transform: translateY(-6px) scale(0.99); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .tagline {
+            margin-top: 12px;
+            font-size: 1.1rem;
+            color: #4a5568;
+            letter-spacing: 1px;
+            font-weight: 400;
+            opacity: 0;
+            animation: fadeUp 1s ease forwards;
+            animation-delay: 1s;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section heading */
+        .section-title {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            font-size: 2rem;
+            color: #1e3a8a;
+            margin: 40px 0 25px;
+            font-weight: 700;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards;
+            animation-delay: 1.4s;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #1e90ff, #00bfff);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* Products */
+        .products {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
+
+        .product-card {
+            background: #ffffff;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(30, 144, 255, 0.15);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            border: 1px solid #e6f3ff;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards;
+            animation-delay: 1.7s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(30, 144, 255, 0.3);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            display: block;
+            background: #f0f8ff;
+        }
+
+        .product-info {
+            padding: 18px 20px 22px;
+            text-align: center;
+        }
+
+        .product-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e3a8a;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e90ff;
+            margin-bottom: 14px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 26px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(90deg, #1e90ff, #00bfff);
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: scale(1.06);
+            box-shadow: 0 8px 20px rgba(30, 144, 255, 0.45);
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-top: 70px;
+            padding: 25px 20px;
+            color: #4a5568;
+            font-size: 0.95rem;
+            border-top: 1px solid #e6f3ff;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards;
+            animation-delay: 2s;
+        }
+
+        footer span {
+            color: #1e6fdb;
+            font-weight: 700;
+        }
+
+        /* ============ MODAL (Admin Panel Popup) ============ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.85) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 18px;
+            background: #f0f8ff;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            color: #1e3a8a;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #ff4757;
+            color: white;
+        }
+
+        .modal h2 {
+            color: #1e6fdb;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .modal .subtitle {
+            text-align: center;
+            color: #4a5568;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background: #f0f8ff;
+            border-radius: 15px;
+            border: 2px dashed #a8d5ff;
+        }
+
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h3 {
+            color: #1e3a8a;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: #4a5568;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; letter-spacing: 1px; }
+            .tagline { font-size: 0.95rem; }
+            .section-title { font-size: 1.5rem; }
+            .product-image { height: 260px; }
+            .top-bar { top: 12px; right: 12px; }
+            .user-info span { font-size: 0.75rem; }
+            .modal { padding: 22px; }
+            .modal h2 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar with Login -->
+    <div class="top-bar">
+        <!-- Google Sign-In Button -->
+        <div id="g_id_onload"
+             data-client_id="198562917648-e9q2rmomcto1c2cq0tumi72dmvndkv0o.apps.googleusercontent.com"
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+        <div id="loginBtnContainer">
+            <div class="g_id_signin"
+                 data-type="standard"
+                 data-size="large"
+                 data-theme="filled_blue"
+                 data-text="signin_with"
+                 data-shape="pill"
+                 data-logo_alignment="left">
+            </div>
+        </div>
+
+        <!-- User info (after login) -->
+        <div class="user-info" id="userInfo">
+            <img id="userPic" src="" alt="User">
+            <span id="userName">User</span>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <h1>Shubh Collection and General Store</h1>
+        <p class="tagline">✨ Latest Fashion & Daily Needs — All in One Place ✨</p>
+    </header>
+
+    <!-- Products Section -->
+    <h2 class="section-title">Our Collection</h2>
+
+    <div class="products">
+        <!-- Product 1: Saree -->
+        <div class="product-card">
+            <img 
+                class="product-image" 
+                src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&q=80" 
+                alt="Beautiful Saree"
+            >
+            <div class="product-info">
+                <h3 class="product-name">Designer Saree</h3>
+                <p class="product-price">₹ 1,299</p>
+                <a href="#" class="btn">Buy Now</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        © 2025 <span>Shubh Collection and General Store</span> — All Rights Reserved
+    </footer>
+
+    <!-- Admin Panel Modal (Empty for now) -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeAdminPanel()">✕</button>
+            <h2>Admin Panel</h2>
+            <p class="subtitle">Welcome, <span id="adminName">Admin</span> 👋</p>
+
+            <div class="empty-state">
+                <div class="icon">📦</div>
+                <h3>Abhi Kuch Nahi Hai</h3>
+                <p>
+                    Yeh admin panel abhi khaali hai.<br>
+                    Yahan aap products add kar payenge.<br>
+                    <br>
+                    <strong>Aage ke steps me:</strong><br>
+                    Photo link + Naam + Price daalne ka form<br>
+                    aayega, jisse product website pe add ho jayega.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ ALLOWED ADMIN EMAILS ============
+        // Yahan sirf woh emails daalein jo admin honge
+        const ALLOWED_EMAILS = [
+            "shouryalakhera2@gmail.com"
+        ];
+
+        // ============ Google Login Handler ============
+        function handleCredentialResponse(response) {
+            // JWT token decode karo
+            const payload = JSON.parse(atob(response.credential.split('.')[1]));
+            const userEmail = payload.email;
+            const userName = payload.name;
+            const userPic = payload.picture;
+
+            console.log("Login attempt:", userEmail);
+
+            // Check karo allowed hai ya nahi
+            if (ALLOWED_EMAILS.includes(userEmail.toLowerCase())) {
+                // ✅ Admin hai — panel kholo
+                showAdminPanel(userName, userPic);
+                saveUserToSession(userName, userPic, userEmail);
+            } else {
+                // ❌ Admin nahi hai
+                alert("❌ Sorry!\n\nAap admin nahi hain.\nSirf dukaan ke admin hi login kar sakte hain.");
+            }
+        }
+
+        // ============ Show Admin Panel ============
+        function showAdminPanel(name, pic) {
+            // Modal kholo
+            document.getElementById("adminModal").classList.add("active");
+            document.getElementById("adminName").textContent = name;
+
+            // Top bar update karo
+            document.getElementById("loginBtnContainer").style.display = "none";
+            document.getElementById("userInfo").style.display = "flex";
+            document.getElementById("userName").textContent = name;
+            document.getElementById("userPic").src = pic;
+        }
+
+        // ============ Close Admin Panel ============
+        function closeAdminPanel() {
+            document.getElementById("adminModal").classList.remove("active");
+        }
+
+        // ============ Logout ============
+        function handleLogout() {
+            // Google se logout
+            if (typeof google !== "undefined" && google.accounts) {
+                google.accounts.id.disableAutoSelect();
+            }
+
+            // Session clear karo
+            sessionStorage.removeItem("shubh_admin");
+            sessionStorage.removeItem("shubh_admin_email");
+
+            // UI reset
+            document.getElementById("loginBtnContainer").style.display = "block";
+            document.getElementById("userInfo").style.display = "none";
+            closeAdminPanel();
+
+            alert("✅ Logout ho gaya!");
+        }
+
+        // ============ Session Save ============
+        function saveUserToSession(name, pic, email) {
+            sessionStorage.setItem("shubh_admin", JSON.stringify({ name, pic }));
+            sessionStorage.setItem("shubh_admin_email", email);
+        }
+
+        // ============ Page Load Pe Session Check ============
+        window.addEventListener("load", () => {
+            const saved = sessionStorage.getItem("shubh_admin");
+            if (saved) {
+                const { name, pic } = JSON.parse(saved);
+                document.getElementById("loginBtnContainer").style.display = "none";
+                document.getElementById("userInfo").style.display = "flex";
+                document.getElementById("userName").textContent = name;
+                document.getElementById("userPic").src = pic;
+            }
+        });
+    </script>
+
+</body>
+</html>
