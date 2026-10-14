@@ -632,10 +632,9 @@
         const productList = document.getElementById("productList");
         const products = Array.from({ length: 36 }, (_, index) => {
             const number = index + 1;
-            const extension = number >= 15 && number <= 32 ? "jpg" : "png";
             return {
                 number,
-                imagePath: `New%20folder/saaree%20${number}.${extension}`
+                imagePath: `New%20folder/saaree%20${number}.jpg`
             };
         });
 
