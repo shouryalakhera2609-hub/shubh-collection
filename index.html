@@ -26,11 +26,6 @@
             padding-bottom: 60px;
         }
 
-        body.intro-active {
-            overflow: hidden;
-            touch-action: none;
-        }
-
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -65,37 +60,6 @@
             bottom: -120px;
             right: -120px;
             animation: float2 11s ease-in-out infinite;
-        }
-
-        .intro-screen {
-            position: fixed;
-            inset: 0;
-            z-index: 2000;
-            display: grid;
-            place-items: center;
-            overflow: hidden;
-            padding: 0;
-            background: #ffffff;
-            overscroll-behavior: none;
-            touch-action: none;
-            transition: opacity 0.35s ease, visibility 0.35s ease;
-        }
-
-        .intro-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .intro-screen img {
-            display: block;
-            width: 100%;
-            height: 100vh;
-            height: 100dvh;
-            object-fit: contain;
-            object-position: center;
-            user-select: none;
-            -webkit-user-drag: none;
         }
 
         @keyframes float1 {
@@ -185,7 +149,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Section heading */
         .section-title {
             position: relative;
             z-index: 1;
@@ -260,7 +223,6 @@
             color: #ffffff;
         }
 
-        /* Products */
         .products {
             position: relative;
             z-index: 1;
@@ -276,98 +238,6 @@
             margin: 20px auto 0;
             color: #4a5568;
             text-align: center;
-        }
-
-        .product-card {
-            position: relative;
-            background: #ffffff;
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(30, 144, 255, 0.15);
-            transition: transform 0.35s ease, box-shadow 0.35s ease;
-            border: 1px solid #e6f3ff;
-            opacity: 0;
-            animation: fadeUp 0.8s ease forwards;
-            animation-delay: 1.7s;
-        }
-
-        .product-delete {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 1;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border: none;
-            border-radius: 50%;
-            background: #ffffff;
-            color: #c62828;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .product-delete.visible {
-            display: flex;
-        }
-
-        .product-delete:hover {
-            background: #ffebee;
-        }
-
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(30, 144, 255, 0.3);
-        }
-
-        .product-image {
-            width: 100%;
-            height: 320px;
-            object-fit: contain;
-            display: block;
-            background: #f0f8ff;
-        }
-
-        .product-info {
-            padding: 18px 20px 22px;
-            text-align: center;
-        }
-
-        .product-name {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1e3a8a;
-            margin-bottom: 8px;
-        }
-
-        .product-price {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #1e90ff;
-            margin-bottom: 14px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 10px 26px;
-            border: none;
-            border-radius: 30px;
-            background: linear-gradient(90deg, #1e90ff, #00bfff);
-            color: #ffffff;
-            font-size: 0.95rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            text-decoration: none;
-        }
-
-        .btn:hover {
-            transform: scale(1.06);
-            box-shadow: 0 8px 20px rgba(30, 144, 255, 0.45);
         }
 
         /* Footer */
@@ -519,17 +389,12 @@
             .collection-search { margin-top: 0; padding: 0 20px; }
             .search-suggestions { gap: 7px; margin-top: 8px; }
             .section-title { font-size: 1.5rem; margin: 10px 0 18px; }
-            .product-image { height: 260px; }
             .modal { padding: 22px; }
             .modal h2 { font-size: 1.4rem; }
         }
     </style>
 </head>
-<body class="intro-active">
-
-    <div class="intro-screen" id="introScreen" aria-label="Shubh Collection and General Store">
-        <img src="Shuh%20Collection%20General%20Store%20Poster.png" alt="Shubh Collection and General Store">
-    </div>
+<body>
 
     <div class="top-bar">
         <div id="g_id_onload"
@@ -557,7 +422,6 @@
         <p class="tagline">✨ Latest Fashion & Daily Needs — All in One Place ✨</p>
     </header>
 
-    <!-- Products Section -->
     <div class="collection-search">
         <input
             id="collectionSearch"
@@ -624,80 +488,28 @@
             "shouryalakhera2@gmail.com"
         ];
 
-        window.setTimeout(() => {
-            document.getElementById("introScreen").classList.add("hidden");
-            document.body.classList.remove("intro-active");
-        }, 5000);
+        function filterCollection() {
+            const searchTerm = document.getElementById("collectionSearch").value.trim().toLowerCase();
+            const productNumber = searchTerm.match(/^(?:product\s*)?(\d+)$/);
+            const productCards = document.querySelectorAll("#productList .product-card");
+            let visibleProducts = 0;
 
-        const productList = document.getElementById("productList");
-        const products = Array.from({ length: 36 }, (_, index) => {
-            const number = index + 1;
-            return {
-                number,
-                imagePath: `New%20folder/saaree%20${number}.jpg`
-            };
-        });
-
-        for (let index = products.length - 1; index > 0; index--) {
-            const randomIndex = Math.floor(Math.random() * (index + 1));
-            [products[index], products[randomIndex]] = [products[randomIndex], products[index]];
-        }
-
-        productList.innerHTML = products.map(({ number, imagePath }) => {
-            return `
-                <div class="product-card">
-                    <button
-                        type="button"
-                        class="product-delete"
-                        data-product-number="${number}"
-                        aria-label="Hide Product ${number}"
-                        title="Hide this product from this browser"
-                        onclick="hideProduct(${number})"
-                    >🗑</button>
-                    <img
-                        class="product-image"
-                        src="${imagePath}"
-                        alt="Product ${number}"
-                        loading="lazy"
-                    >
-                    <div class="product-info">
-                        <h3 class="product-name">Product ${number}</h3>
-                        <button type="button" class="btn" onclick="openContactModal()">Buy Now</button>
-                    </div>
-                </div>
-            `;
-        }).join("");
-
-        productList.querySelectorAll(".product-card").forEach((card) => {
-            const productNumber = card.querySelector(".product-delete").dataset.productNumber;
-            if (localStorage.getItem(`shubh_hidden_product_${productNumber}`) === "true") {
-                card.remove();
-            }
-        });
-
-        function setProductDeleteVisibility(visible) {
-            document.querySelectorAll(".product-delete").forEach((button) => {
-                button.classList.toggle("visible", visible);
+            productCards.forEach((card) => {
+                const productName = card.querySelector(".product-name").textContent.toLowerCase();
+                const matchesSearch = productNumber
+                    ? productName === `product ${Number(productNumber[1])}`
+                    : productName.includes(searchTerm);
+                card.hidden = !matchesSearch;
+                if (matchesSearch) {
+                    visibleProducts += 1;
+                }
             });
+
+            document.getElementById("noSearchResults").hidden = !searchTerm || visibleProducts > 0;
         }
 
-        function hideProduct(number) {
-            if (!window.confirm(`Hide Product ${number} from this browser? Its image file will not be deleted.`)) {
-                return;
-            }
-
-            try {
-                localStorage.setItem(`shubh_hidden_product_${number}`, "true");
-            } catch (error) {
-                alert("Could not hide this product. Please check your browser storage settings and try again.");
-                return;
-            }
-
-            const card = Array.from(document.querySelectorAll("#productList .product-card"))
-                .find((item) => item.querySelector(".product-name").textContent === `Product ${number}`);
-            if (card) {
-                card.remove();
-            }
+        function searchCollection(searchTerm) {
+            document.getElementById("collectionSearch").value = searchTerm;
             filterCollection();
         }
 
@@ -727,8 +539,6 @@
             // Modal kholo
             document.getElementById("adminModal").classList.add("active");
             document.getElementById("adminName").textContent = name;
-            setProductDeleteVisibility(true);
-
             // Top bar update karo
             document.getElementById("loginBtnContainer").style.display = "none";
             document.getElementById("userInfo").style.display = "flex";
@@ -759,31 +569,6 @@
             }
         });
 
-        function filterCollection() {
-            const searchTerm = document.getElementById("collectionSearch").value.trim().toLowerCase();
-            const productNumber = searchTerm.match(/^(?:product\s*)?(\d+)$/);
-            const productCards = document.querySelectorAll("#productList .product-card");
-            let visibleProducts = 0;
-
-            productCards.forEach((card) => {
-                const productName = card.querySelector(".product-name").textContent.toLowerCase();
-                const matchesSearch = productNumber
-                    ? productName === `product ${Number(productNumber[1])}`
-                    : productName.includes(searchTerm);
-                card.hidden = !matchesSearch;
-                if (matchesSearch) {
-                    visibleProducts += 1;
-                }
-            });
-
-            document.getElementById("noSearchResults").hidden = visibleProducts > 0;
-        }
-
-        function searchCollection(searchTerm) {
-            document.getElementById("collectionSearch").value = searchTerm;
-            filterCollection();
-        }
-
         // ============ Logout ============
         function handleLogout() {
             // Google se logout
@@ -798,7 +583,6 @@
             // UI reset
             document.getElementById("loginBtnContainer").style.display = "flex";
             document.getElementById("userInfo").style.display = "none";
-            setProductDeleteVisibility(false);
             closeAdminPanel();
 
             alert("✅ Logout ho gaya!");
@@ -816,7 +600,6 @@
             if (saved) {
                 document.getElementById("loginBtnContainer").style.display = "none";
                 document.getElementById("userInfo").style.display = "flex";
-                setProductDeleteVisibility(true);
             }
         });
     </script>
