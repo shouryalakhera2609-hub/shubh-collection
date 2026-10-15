@@ -257,6 +257,31 @@
             text-align: center;
         }
 
+        .buy-button {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 24px;
+            background: #1e6fdb;
+            color: #ffffff;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .buy-button:hover {
+            background: #1557b0;
+            transform: translateY(-1px);
+        }
+
+        .buy-button:focus-visible {
+            outline: 3px solid #00bfff;
+            outline-offset: 2px;
+        }
+
         .no-results {
             margin: 20px auto 0;
             color: #4a5568;
@@ -466,50 +491,72 @@
         <article class="product-card">
             <img class="product-image" src="images/saree-1.jpg" alt="Saree 1">
             <h3 class="product-name">Saree 1</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 1')">Buy</button>
         </article>
         <article class="product-card">
             <img class="product-image" src="images/saree-2.jpg" alt="Saree 2">
             <h3 class="product-name">Saree 2</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 2')">Buy</button>
         </article>
         <article class="product-card">
             <img class="product-image" src="images/saree-3.jpg" alt="Saree 3">
             <h3 class="product-name">Saree 3</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 3')">Buy</button>
         </article>
         <article class="product-card">
             <img class="product-image" src="images/saree-4.jpg" alt="Saree 4">
             <h3 class="product-name">Saree 4</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 4')">Buy</button>
         </article>
         <article class="product-card">
             <img class="product-image" src="images/saree-5.jpg" alt="Saree 5">
             <h3 class="product-name">Saree 5</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 5')">Buy</button>
         </article>
         <article class="product-card">
             <img class="product-image" src="images/saree-6.jpg" alt="Saree 6">
             <h3 class="product-name">Saree 6</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 6')">Buy</button>
         </article>
         <article class="product-card">
             <img class="product-image" src="images/saree-7.jpg" alt="Saree 7">
             <h3 class="product-name">Saree 7</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 7')">Buy</button>
         </article>
         <article class="product-card">
             <img class="product-image" src="images/saree-8.jpg" alt="Saree 8">
             <h3 class="product-name">Saree 8</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 8')">Buy</button>
         </article>
         <article class="product-card">
             <img class="product-image" src="images/saree-9.jpg" alt="Saree 9">
             <h3 class="product-name">Saree 9</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 9')">Buy</button>
         </article>
         <article class="product-card">
             <img class="product-image" src="images/saree-10.jpg" alt="Saree 10">
             <h3 class="product-name">Saree 10</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 10')">Buy</button>
         </article>
         <article class="product-card">
             <img class="product-image" src="images/saree-11.jpg" alt="Saree 11">
             <h3 class="product-name">Saree 11</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 11')">Buy</button>
         </article>
         <article class="product-card">
             <img class="product-image" src="images/saree-12.jpg" alt="Saree 12">
             <h3 class="product-name">Saree 12</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 12')">Buy</button>
+        </article>
+        <article class="product-card">
+            <img class="product-image" src="images/saree-13.jpg" alt="Saree 13">
+            <h3 class="product-name">Saree 13</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 13')">Buy</button>
+        </article>
+        <article class="product-card">
+            <img class="product-image" src="images/saree-14.jpg" alt="Saree 14">
+            <h3 class="product-name">Saree 14</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Saree 14')">Buy</button>
         </article>
     </div>
     <p class="no-results" id="noSearchResults" role="status" hidden>No matching products found.</p>
@@ -544,11 +591,12 @@
     <div class="modal-overlay" id="contactModal" onclick="handleContactModalClick(event)">
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
             <button class="modal-close" type="button" aria-label="Close contact details" onclick="closeContactModal()">✕</button>
-            <h2 id="contactModalTitle">Shubh Collection</h2>
+            <h2 id="contactModalTitle">Contact Us</h2>
             <div class="contact-details">
-                <p><strong>Address:</strong><br>Salamatpur, Jama Masjid ke paas<br>Shubh Collection</p>
+                <p id="contactProductMessage">Aap order ke liye humein contact kar sakte hain.</p>
+                <p><strong>Address:</strong><br>Shubh Collection, Jama Masjid ke paas</p>
                 <p><strong>Phone:</strong><br><a href="tel:8349537392">8349537392</a></p>
-                <p>Please contact us. Home delivery is also available.</p>
+                <p>Order dene ke liye humein call karein. Home delivery bhi available hai.</p>
             </div>
         </div>
     </div>
@@ -621,7 +669,9 @@
             document.getElementById("adminModal").classList.remove("active");
         }
 
-        function openContactModal() {
+        function openContactModal(productName) {
+            document.getElementById("contactProductMessage").textContent =
+                `${productName} kharidne ke liye humein contact karein.`;
             document.getElementById("contactModal").classList.add("active");
         }
 
