@@ -234,6 +234,30 @@
             padding: 0 25px;
         }
 
+        .product-card {
+            overflow: hidden;
+            padding: 14px;
+            border: 1px solid #e6f3ff;
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 8px 24px rgba(30, 144, 255, 0.12);
+        }
+
+        .product-image {
+            display: block;
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .product-name {
+            margin-top: 12px;
+            color: #1e3a8a;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
         .no-results {
             margin: 20px auto 0;
             color: #4a5568;
@@ -439,7 +463,16 @@
     </div>
     <h2 class="section-title">Our Collection</h2>
 
-    <div class="products" id="productList"></div>
+    <div class="products" id="productList">
+        <article class="product-card">
+            <img class="product-image" src="images/saree-1.jpg" alt="Saree 1">
+            <h3 class="product-name">Saree 1</h3>
+        </article>
+        <article class="product-card">
+            <img class="product-image" src="images/saree-2.jpg" alt="Saree 2">
+            <h3 class="product-name">Saree 2</h3>
+        </article>
+    </div>
     <p class="no-results" id="noSearchResults" role="status" hidden>No matching products found.</p>
 
     <!-- Footer -->
