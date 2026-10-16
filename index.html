@@ -588,6 +588,26 @@
             <h3 class="product-name">Product No. 20</h3>
             <button class="buy-button" type="button" onclick="openContactModal('Product No. 20')">Buy</button>
         </article>
+        <article class="product-card">
+            <img class="product-image" src="images/saree-21.jpg" alt="Product No. 21">
+            <h3 class="product-name">Product No. 21</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Product No. 21')">Buy</button>
+        </article>
+        <article class="product-card">
+            <img class="product-image" src="images/saree-22.jpg" alt="Product No. 22">
+            <h3 class="product-name">Product No. 22</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Product No. 22')">Buy</button>
+        </article>
+        <article class="product-card">
+            <img class="product-image" src="images/saree-23.jpg" alt="Product No. 23">
+            <h3 class="product-name">Product No. 23</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Product No. 23')">Buy</button>
+        </article>
+        <article class="product-card">
+            <img class="product-image" src="images/saree-24.jpg" alt="Product No. 24">
+            <h3 class="product-name">Product No. 24</h3>
+            <button class="buy-button" type="button" onclick="openContactModal('Product No. 24')">Buy</button>
+        </article>
     </div>
     <p class="no-results" id="noSearchResults" role="status" hidden>No matching products found.</p>
 
@@ -745,6 +765,27 @@
             sessionStorage.setItem("shubh_admin", JSON.stringify({ name, pic }));
             sessionStorage.setItem("shubh_admin_email", email);
         }
+
+        function shuffleProductImages() {
+            const productImages = Array.from(document.querySelectorAll("#productList .product-image"));
+            const originalSources = productImages.map((image) => image.getAttribute("src"));
+            const imageSources = productImages.map((image) => image.getAttribute("src"));
+
+            for (let index = imageSources.length - 1; index > 0; index -= 1) {
+                const randomIndex = Math.floor(Math.random() * (index + 1));
+                [imageSources[index], imageSources[randomIndex]] = [imageSources[randomIndex], imageSources[index]];
+            }
+
+            if (imageSources.every((source, index) => source === originalSources[index])) {
+                imageSources.push(imageSources.shift());
+            }
+
+            productImages.forEach((image, index) => {
+                image.src = imageSources[index];
+            });
+        }
+
+        shuffleProductImages();
 
         // ============ Page Load Pe Session Check ============
         window.addEventListener("load", () => {
