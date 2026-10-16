@@ -767,22 +767,20 @@
         }
 
         function shuffleProductImages() {
-            const productImages = Array.from(document.querySelectorAll("#productList .product-image"));
-            const originalSources = productImages.map((image) => image.getAttribute("src"));
-            const imageSources = productImages.map((image) => image.getAttribute("src"));
+            const productList = document.getElementById("productList");
+            const originalCards = Array.from(productList.querySelectorAll(".product-card"));
+            const shuffledCards = [...originalCards];
 
-            for (let index = imageSources.length - 1; index > 0; index -= 1) {
+            for (let index = shuffledCards.length - 1; index > 0; index -= 1) {
                 const randomIndex = Math.floor(Math.random() * (index + 1));
-                [imageSources[index], imageSources[randomIndex]] = [imageSources[randomIndex], imageSources[index]];
+                [shuffledCards[index], shuffledCards[randomIndex]] = [shuffledCards[randomIndex], shuffledCards[index]];
             }
 
-            if (imageSources.every((source, index) => source === originalSources[index])) {
-                imageSources.push(imageSources.shift());
+            if (shuffledCards.every((card, index) => card === originalCards[index])) {
+                shuffledCards.push(shuffledCards.shift());
             }
 
-            productImages.forEach((image, index) => {
-                image.src = imageSources[index];
-            });
+            shuffledCards.forEach((card) => productList.appendChild(card));
         }
 
         shuffleProductImages();
